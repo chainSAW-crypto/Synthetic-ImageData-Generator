@@ -204,6 +204,154 @@ Here’s an example of how we might have used these commands in sequence:
 
 This tailored explanation demonstrates how these commands might have been actively used in the development of this repository.
 
+# Setting Up the Repository on EC2 Ubuntu Shell for Global Deployment
+
+## 1. Updating the System
+To ensure the EC2 instance is up to date, we started with:
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+This updated the package list and installed the latest versions of packages.
+
+---
+
+## 2. Installing Required Dependencies
+We installed essential tools like Python, pip, and Git to set up the environment:
+```bash
+sudo apt install python3 python3-pip git -y
+```
+This provided the necessary Python version and Git for managing the repository.
+
+---
+
+## 3. Cloning the Repository
+To deploy the backend, we cloned the repository from GitHub:
+```bash
+git clone https://github.com/chainSAW-crypto/Synthetic-ImageData-Generator.git
+cd Synthetic-ImageData-Generator
+```
+This pulled all files, branches, and commit history of the repository into the EC2 instance.
+
+---
+
+## 4. Setting Up a Virtual Environment
+We created and activated a Python virtual environment to isolate dependencies:
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+This ensured that all installed packages were local to the project and did not interfere with the system Python environment.
+
+---
+
+## 5. Installing Python Dependencies
+To install all required libraries for the project, we used:
+```bash
+pip install -r requirements.txt
+```
+This installed dependencies listed in the `requirements.txt` file, such as Flask, FastAPI, or ML-related libraries.
+
+---
+
+## 6. Setting Up Environment Variables
+We configured environment variables by editing the `.env` file. On EC2, we ensured permissions were set correctly:
+```bash
+nano .env
+chmod 600 .env
+```
+The `.env` file contained sensitive configurations like API keys or database credentials.
+
+---
+
+## 7. Running the Backend in the Background
+To run the backend server, we used the `nohup` command to keep it running even after logging out:
+```bash
+nohup python3 app.py > backend.log 2>&1 &
+```
+This started the backend and redirected logs to `backend.log`.
+
+---
+
+## 8. Configuring Cronjobs for Autonomous Execution
+To ensure the backend runs autonomously and restarts if the server reboots, we added cronjobs:
+1. Edit the cron jobs:
+    ```bash
+    crontab -e
+    ```
+2. Add the following entries:
+    - Start the backend on reboot:
+        ```bash
+        @reboot cd /home/ubuntu/Synthetic-ImageData-Generator && source venv/bin/activate && nohup python3 app.py > backend.log 2>&1 &
+        ```
+    - Schedule a periodic task to clean up logs daily:
+        ```bash
+        0 0 * * * cd /home/ubuntu/Synthetic-ImageData-Generator && > backend.log
+        ```
+
+---
+
+## 9. Setting Up Firewalls and Security Groups
+To allow requests to the backend, we configured the EC2 security group to open ports (e.g., 80 for HTTP or 5000 for Flask):
+```bash
+sudo ufw allow 5000
+sudo ufw enable
+```
+We ensured the appropriate ports were open for external access.
+
+---
+
+## 10. Automating Deployment with Shell Scripts
+We created a deployment script to simplify the setup process. For example:
+```bash
+nano deploy.sh
+```
+Contents of `deploy.sh`:
+```bash
+#!/bin/bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install python3 python3-pip git -y
+git clone https://github.com/chainSAW-crypto/Synthetic-ImageData-Generator.git
+cd Synthetic-ImageData-Generator
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+nohup python3 app.py > backend.log 2>&1 &
+```
+Make the script executable and run it:
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+---
+
+## Example Workflow
+Here’s how everything comes together:
+1. **Instance Setup**:
+    ```bash
+    sudo apt update && sudo apt upgrade -y
+    sudo apt install python3 python3-pip git -y
+    ```
+2. **Clone and Configure**:
+    ```bash
+    git clone https://github.com/chainSAW-crypto/Synthetic-ImageData-Generator.git
+    cd Synthetic-ImageData-Generator
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
+3. **Run and Automate**:
+    ```bash
+    nohup python3 app.py > backend.log 2>&1 &
+    crontab -e
+    ```
+4. **Reboot Entry for Cron**:
+    ```bash
+    @reboot cd /home/ubuntu/Synthetic-ImageData-Generator && source venv/bin/activate && nohup python3 app.py > backend.log 2>&1 &
+    ```
+
+This setup ensures the backend runs seamlessly on an EC2 Ubuntu instance, with cronjobs providing automation and reliability.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
