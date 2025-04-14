@@ -23,7 +23,8 @@ A FastAPI-based service that generates synthetic image datasets using LangGraph 
 - Node.js (for frontend development)
 - Groq API key
 - OpenAI API key
-- Flask For backend API 
+- Flask For backend API
+- Python libraries = langgraph langsmith langchain langchain_groq langchain_community langchain_openai FastAPI uvicorn
 
 ## Installation
 
