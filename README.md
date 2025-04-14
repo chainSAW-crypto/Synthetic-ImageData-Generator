@@ -1,4 +1,10 @@
-# Synthetic Image Data Generator
+# Gen AI based Data Generator for Researchers and ML engineers 
+
+To solve the Gap of tedious manual image generation to train on single scenario, we provide the AI powered application to automate the whole process and make it a one stop solution for all creation, modification and augmentation needs for a image Data. 
+We are keeping it open source so that the Community can utilize its capabilities, in order to Solve Dataset Needs for their ML applications.
+The Project Utilizes the Gen-AI capabilities to Generate Data to match real world Scenarios. 
+Automating the tedious task of collecting Data and scraping. Agentic Scraping of Data, reflecting explainability over the provided results. eg. Results like Perplexity. 
+Integration of Generative capabilities and Augmentation to create versatile databases to cater your research needs.
 
 A FastAPI-based service that generates synthetic image datasets using LangGraph workflow and AI models. This project combines the power of language models and image generation to create customizable datasets for various use cases.
 
@@ -17,6 +23,7 @@ A FastAPI-based service that generates synthetic image datasets using LangGraph 
 - Node.js (for frontend development)
 - Groq API key
 - OpenAI API key
+- Flask For backend API 
 
 ## Installation
 
@@ -42,6 +49,12 @@ OPENAI_API_KEY=your_openai_api_key
 ## API Endpoints
 
 ### POST /chat
+
+Chat with the UI 
+- Chat with the conversation Agent to seamlessly get preffered responses.
+- You can Ask for sample images, review and fine tune the diversity of generated prompts which acts as the basis of the dataset.
+- The Full Image Dataset Zip file will be Provided to the User once he is satisfied with sample images, prompts and is ready to get Full Dataset.
+
 Process user messages and generate responses/images.
 ```json
 {
