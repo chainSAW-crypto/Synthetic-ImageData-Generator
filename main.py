@@ -12,6 +12,9 @@ from langgraph.graph import StateGraph, END
 import re
 import os
 import json
+import streamlit as st
+import pandas as pd
+import plotly.express as px
 # from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from Dependancies import init_graph_state, create_image_dataset_graph, graph_runnable
@@ -355,6 +358,42 @@ async def get_session(session_id: str):
 #         "active_sessions": len(active_sessions),
 #         "default_keys_available": app.state.agents is not None
 #     }
+
+
+
+
+# Load the dataset
+@st.cache_data
+def load_data():
+    df = pd.read_csv('Energy_Consumption_India.csv')
+    return df
+
+df = load_data()
+
+# Title and subtitle
+st.title("Energy Consumption Dashboard")
+st.subheader("Visualizing Energy Consumption in India")
+
+# NEW: Add country selection
+countries = df['Country'].unique()
+selected_country = st.selectbox("Select a Country", countries)
+
+# Filter based on selected country
+df_country = df[df['Country'] == selected_country]
+
+# NEW: Add year selection after filtering country
+years = sorted(df_country['Year'].unique())
+selected_year = st.selectbox("Select a Year", years)
+
+# Filter based on selected year
+df_filtered = df_country[df_country['Year'] == selected_year]
+
+# Plotting
+st.subheader(f"Energy Consumption by Sector in {selected_country} - {selected_year}")
+fig = px.bar(df_filtered, x='Sector', y='Consumption', color='Sector',
+             labels={'Consumption': 'Energy Consumption'},
+             title='Energy Consumption by Sector')
+st.plotly_chart(fig)
 
 
 # Run the server if executed directly
